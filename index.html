@@ -3,181 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedido de Casamento</title>
+    <title>Contador de Dias Sem Baixas</title>
     <style>
         body {
-            background-image: url('https://images2.imgbox.com/6c/e1/Jizg21IE_o.gif');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            text-align: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #ffe5e5;
+            color: #800000;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
+            height: 100vh;
             margin: 0;
-            overflow: hidden;
         }
 
-        .content {
-            display: none;
-            flex-direction: column; /* Alinha itens verticalmente */
-            align-items: center;
-            animation: fadeInContent 2s ease-out forwards;
-        }
-
-        @keyframes fadeInContent {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        img {
+            width: 750px;
+            height: 414px;
+            object-fit: cover;
+            margin-bottom: 20px;
         }
 
         h1 {
-            font-size: 3em;
-            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: #b30000;
+            margin: 0;
         }
 
-        button {
-            margin: 10px;
-            padding: 15px 30px;
-            font-size: 18px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            transition: transform 0.3s, box-shadow 0.3s;
+        p {
+            font-size: 1.5rem;
+            margin: 0;
         }
 
-        button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        .contador {
+            margin-top: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff1a1a;
         }
 
-        #sim {
-            background-color: #28a745;
-            color: white;
+        .pergunta {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #cc0000;
+            font-style: italic;
         }
 
-        #nao {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        /* Estilos para o pop-up */
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            color: black;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            display: none;
-            z-index: 1000;
-            animation: popUpAppear 0.5s ease-out;
-        }
-
-        @keyframes popUpAppear {
-            from { opacity: 0; transform: translate(-50%, -60%); }
-            to { opacity: 1; transform: translate(-50%, -50%); }
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 999;
-        }
-
-        /* Estilos para a apresentação inicial */
-        .intro {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-            animation: fadeOutIntro 3s ease-out forwards;
-        }
-
-        .intro h1 {
-            font-size: 2.5em;
-            animation: fadeInText 3.5s ease-out;
-        }
-
-        @keyframes fadeInText {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeOutIntro {
-            0% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; display: none; }
-        }
     </style>
 </head>
 <body>
-    <div class="intro">
-        <h1>Olá Mulherão da Porra, tudo bem?</h1>
-    </div>
 
-    <div class="content">
-        <h1>Você quer se casar comigo novamente?</h1>
-        <button id="sim" onclick="resposta('Parabéns, você acabou de desbloquear o segredo da felicidade... Lhe farei a pessoa mais FELIZ do Multiverso!')">SIM</button>
-        <button id="nao" onclick="respostaNao()">NÃO</button>
-    </div>
+    <!-- Imagem centralizada -->
+    <img src="https://cdn.fcc.org.br/PRODUCAO/eY4uhGpLrjmyY61CdQplMmtyK6v83SLYguU8QTSL6CC0vLPtzcYxfi0BaeT2WQIw7OSiA4wcw81MfMNnRJ24jxuxbpEs3rZyDuhr1zAwB5aQJ3W6FgdvOegLRIIoMsW2n9VecbnVNgXgEzTh.webp" alt="Imagem no topo">
 
-    <div class="overlay" id="overlay" onclick="fecharPopup()"></div>
-    <div class="popup" id="popup">
-        <p id="popupMessage"></p>
-        <button onclick="fecharPopup()">Fechar</button>
-    </div>
+    <h1>Dias sem baixas nesta guerra:</h1>
+    <p class="contador" id="contador"></p>
+    <p class="pergunta">E você, arrisca um palpite da próxima baixa?</p>
 
     <script>
-        let contadorNao = 0;
-        const mensagensNao = [
-            "Ah não... Resposta Errada!",
-            "Não não não, resposta errada novamente hein!",
-            "Pense bem, podemos ter uma segunda lua de mel!",
-            "Hummm... Tem certeza de que não me quer como um marido MIL VEZES melhor ao seu lado?",
-            "Eu não pretendo desistir hein!"
-        ];
+        // Data de início
+        const dataInicio = new Date('2024-10-18');
 
-        function resposta(mensagem) {
-            document.getElementById('popupMessage').innerText = mensagem;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('popup').style.display = 'block';
+        function atualizarContadores() {
+            const agora = new Date();
+            
+            // Cálculo da diferença em milissegundos
+            const diffTime = Math.abs(agora - dataInicio);
+            
+            // Cálculo da diferença em dias, horas, minutos e segundos
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+            const diffSeconds = Math.floor((diffTime % (1000 * 60)) / 1000);
+
+            // Atualiza o contador com o formato desejado
+            document.getElementById('contador').textContent = 
+                `${diffDays} dias, ${diffHours} horas, ${diffMinutes} minutos e ${diffSeconds} segundos`;
         }
 
-        function respostaNao() {
-            const mensagem = mensagensNao[contadorNao % mensagensNao.length];
-            resposta(mensagem);
-            contadorNao++;
-        }
-
-        function fecharPopup() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('popup').style.display = 'none';
-        }
-
-        window.onload = function() {
-            setTimeout(() => {
-                document.querySelector('.intro').style.display = 'none';
-                document.querySelector('.content').style.display = 'flex';
-            }, 4000); // Tempo de duração da introdução
-        }
+        // Atualiza o contador a cada segundo
+        setInterval(atualizarContadores, 1000);
     </script>
+
 </body>
 </html>
